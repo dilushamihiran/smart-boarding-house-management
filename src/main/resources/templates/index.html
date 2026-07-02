@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Home - Smart Boarding House')}"></head>
+<body>
+    <nav th:replace="~{base :: navbar}"></nav>
+        
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <h1 class="display-4 fw-bold mb-4">Find Your Perfect <br><span class="text-gradient">Boarding House</span> Today</h1>
+                        <p class="lead text-muted mb-5">The easiest way for university students to search, compare, and book verified boarding houses online.</p>
+                        <div class="d-flex gap-3">
+                            <a th:href="@{/search}" class="btn btn-primary btn-lg rounded-pill px-5">Find a Room</a>
+                            <a th:href="@{/register}" class="btn btn-outline-dark btn-lg rounded-pill px-5 bg-white">Are you an Owner?</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hero Image" class="img-fluid rounded-4 shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-5 bg-white">
+            <div class="container py-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold">Why Choose Us?</h2>
+                    <p class="text-muted">We simplify the entire process for both students and owners.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="feature-card h-100">
+                            <div class="icon-box icon-primary"><i class="bi bi-search"></i></div>
+                            <h4>Easy Search</h4>
+                            <p class="text-muted mb-0">Filter by price, location, and capacity to find the best room near your campus.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card h-100">
+                            <div class="icon-box icon-success"><i class="bi bi-shield-check"></i></div>
+                            <h4>Secure Booking</h4>
+                            <p class="text-muted mb-0">Request a room online and get notified immediately when the owner approves.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card h-100">
+                            <div class="icon-box icon-primary"><i class="bi bi-chat-dots"></i></div>
+                            <h4>24/7 Support</h4>
+                            <p class="text-muted mb-0">Submit complaints directly to your owner and track their resolution status.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <script th:replace="~{base :: scripts}"></script>
+</body>
+</html>
