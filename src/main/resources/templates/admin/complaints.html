@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Complaints Management')}"></head>
+<body class="bg-light">
+    <nav th:replace="~{base :: navbar}"></nav>
+
+    <div class="container py-5 mt-5">
+        <!-- Page Header -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center">
+                <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary rounded-pill me-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+                <div>
+                    <h2 class="fw-bold mb-0"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Complaints</h2>
+                    <p class="text-muted mb-0">Monitor and resolve user complaints across the platform.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="bi bi-x-circle-fill me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Complaints Table Card -->
+        <div class="card border-0 rounded-4 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr class="bg-light">
+                                <th class="ps-4 py-3 text-muted small fw-semibold text-uppercase">ID</th>
+                                <th class="py-3 text-muted small fw-semibold text-uppercase">Subject</th>
+                                <th class="py-3 text-muted small fw-semibold text-uppercase" style="max-width:220px">Description</th>
+                                <th class="py-3 text-muted small fw-semibold text-uppercase">Submitted By</th>
+                                <th class="py-3 text-muted small fw-semibold text-uppercase">Boarding House</th>
+                                <th class="py-3 text-muted small fw-semibold text-uppercase">Status</th>
+                                <th class="py-3 text-muted small fw-semibold text-uppercase">Date</th>
+                                <th class="pe-4 py-3 text-muted small fw-semibold text-uppercase text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="complaint : ${complaints}">
+                                <td class="ps-4 fw-semibold" th:text="${complaint.id}"></td>
+                                <td class="fw-medium" th:text="${complaint.subject}"></td>
+                                <td style="max-width:220px">
+                                    <span class="text-muted d-inline-block text-truncate" style="max-width:200px"
+                                          th:text="${complaint.description}"
+                                          th:title="${complaint.description}"></span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
+                                             style="width:32px; height:32px; background: linear-gradient(135deg, #eff6ff, #dbeafe);">
+                                            <i class="bi bi-person-fill text-primary small"></i>
+                                        </div>
+                                        <span th:text="${complaint.user.fullName}"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted" th:text="${complaint.boardingHouse.name}"></span>
+                                </td>
+                                <td>
+                                    <span th:if="${complaint.status.name() == 'OPEN'}" class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2">
+                                        <i class="bi bi-envelope-open-fill me-1"></i>Open
+                                    </span>
+                                    <span th:if="${complaint.status.name() == 'IN_PROGRESS'}" class="badge rounded-pill bg-info bg-opacity-10 text-info px-3 py-2">
+                                        <i class="bi bi-arrow-repeat me-1"></i>In Progress
+                                    </span>
+                                    <span th:if="${complaint.status.name() == 'RESOLVED'}" class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Resolved
+                                    </span>
+                                </td>
+                                <td class="text-muted" th:text="${#temporals.format(complaint.createdAt, 'yyyy-MM-dd')}"></td>
+                                <td class="pe-4 text-end">
+                                    <form th:if="${complaint.status.name() != 'RESOLVED'}"
+                                          th:action="@{/admin/complaints/{id}/resolve(id=${complaint.id})}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3"
+                                                title="Mark as Resolved">
+                                            <i class="bi bi-check2-all me-1"></i>Resolve
+                                        </button>
+                                    </form>
+                                    <span th:if="${complaint.status.name() == 'RESOLVED'}" class="text-success small fst-italic">
+                                        <i class="bi bi-patch-check-fill me-1"></i>Resolved
+                                    </span>
+                                </td>
+                            </tr>
+                            <!-- Empty State -->
+                            <tr th:if="${#lists.isEmpty(complaints)}">
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                                    No complaints found.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:replace="~{base :: scripts}"></script>
+</body>
+</html>
