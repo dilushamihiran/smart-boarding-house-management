@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Search Rooms')}"></head>
+<body class="bg-light">
+<nav th:replace="~{base :: navbar}"></nav>
+
+<div class="container py-5">
+    <!-- Search Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">
+            <i class="bi bi-search text-primary me-2"></i>Find Your Perfect Room
+        </h2>
+        <p class="text-muted">Search available rooms across Sri Lanka</p>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="card border-0 rounded-4 shadow-sm mb-5">
+        <div class="card-body p-4">
+            <form action="/search" method="get">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label for="district" class="form-label fw-semibold">
+                            <i class="bi bi-pin-map me-1"></i> District
+                        </label>
+                        <select class="form-select rounded-3 py-2" id="district" name="district">
+                            <option value="">All Districts</option>
+                            <option value="Ampara" th:selected="${district == 'Ampara'}">Ampara</option>
+                            <option value="Anuradhapura" th:selected="${district == 'Anuradhapura'}">Anuradhapura</option>
+                            <option value="Badulla" th:selected="${district == 'Badulla'}">Badulla</option>
+                            <option value="Batticaloa" th:selected="${district == 'Batticaloa'}">Batticaloa</option>
+                            <option value="Colombo" th:selected="${district == 'Colombo'}">Colombo</option>
+                            <option value="Galle" th:selected="${district == 'Galle'}">Galle</option>
+                            <option value="Gampaha" th:selected="${district == 'Gampaha'}">Gampaha</option>
+                            <option value="Hambantota" th:selected="${district == 'Hambantota'}">Hambantota</option>
+                            <option value="Jaffna" th:selected="${district == 'Jaffna'}">Jaffna</option>
+                            <option value="Kalutara" th:selected="${district == 'Kalutara'}">Kalutara</option>
+                            <option value="Kandy" th:selected="${district == 'Kandy'}">Kandy</option>
+                            <option value="Kegalle" th:selected="${district == 'Kegalle'}">Kegalle</option>
+                            <option value="Kilinochchi" th:selected="${district == 'Kilinochchi'}">Kilinochchi</option>
+                            <option value="Kurunegala" th:selected="${district == 'Kurunegala'}">Kurunegala</option>
+                            <option value="Mannar" th:selected="${district == 'Mannar'}">Mannar</option>
+                            <option value="Matale" th:selected="${district == 'Matale'}">Matale</option>
+                            <option value="Matara" th:selected="${district == 'Matara'}">Matara</option>
+                            <option value="Monaragala" th:selected="${district == 'Monaragala'}">Monaragala</option>
+                            <option value="Mullaitivu" th:selected="${district == 'Mullaitivu'}">Mullaitivu</option>
+                            <option value="Nuwara Eliya" th:selected="${district == 'Nuwara Eliya'}">Nuwara Eliya</option>
+                            <option value="Polonnaruwa" th:selected="${district == 'Polonnaruwa'}">Polonnaruwa</option>
+                            <option value="Puttalam" th:selected="${district == 'Puttalam'}">Puttalam</option>
+                            <option value="Ratnapura" th:selected="${district == 'Ratnapura'}">Ratnapura</option>
+                            <option value="Trincomalee" th:selected="${district == 'Trincomalee'}">Trincomalee</option>
+                            <option value="Vavuniya" th:selected="${district == 'Vavuniya'}">Vavuniya</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="maxPrice" class="form-label fw-semibold">
+                            <i class="bi bi-currency-dollar me-1"></i> Max Price (LKR)
+                        </label>
+                        <input type="number" class="form-control rounded-3 py-2" id="maxPrice" name="maxPrice"
+                               th:value="${maxPrice}" placeholder="Enter max budget" min="0" step="500">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary rounded-pill w-100 py-2">
+                            <i class="bi bi-search me-1"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Count -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="text-muted mb-0">
+            <span class="fw-bold" th:text="${#lists.size(rooms)}">0</span> rooms found
+        </p>
+        <a href="/search" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Clear Filters
+        </a>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(rooms)}" class="text-center py-5">
+        <div class="card rounded-4 shadow-sm border-0 p-5">
+            <i class="bi bi-emoji-frown display-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">No Rooms Found</h4>
+            <p class="text-muted">Try adjusting your search filters to find more results.</p>
+        </div>
+    </div>
+
+    <!-- Room Cards -->
+    <div class="row g-4" th:unless="${#lists.isEmpty(rooms)}">
+        <div class="col-md-6 col-lg-4" th:each="room : ${rooms}">
+            <div class="card border-0 rounded-4 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title fw-bold mb-0" th:text="${room.roomName}">Room Name</h5>
+                        <span class="badge rounded-pill px-3 py-2"
+                              th:classappend="${room.availability} ? 'bg-success' : 'bg-secondary'"
+                              th:text="${room.availability} ? 'Available' : 'Occupied'">Status</span>
+                    </div>
+
+                    <div class="mb-2">
+                        <i class="bi bi-building text-primary me-2"></i>
+                        <span class="fw-semibold" th:text="${room.boardingHouse.name}">Boarding House</span>
+                    </div>
+                    <div class="mb-2">
+                        <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                        <small class="text-muted" th:text="${room.boardingHouse.address}">Address</small>
+                    </div>
+                    <div class="mb-2">
+                        <i class="bi bi-pin-map-fill text-info me-2"></i>
+                        <small class="text-muted" th:text="${room.boardingHouse.district}">District</small>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-people-fill text-muted me-1"></i>
+                            <small th:text="${room.capacity} + ' persons'">2 persons</small>
+                        </div>
+                        <div>
+                            <span class="fs-5 fw-bold text-success" th:text="'Rs. ' + ${#numbers.formatDecimal(room.price, 1, 2)}">Rs. 5000.00</span>
+                            <small class="text-muted">/month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{base :: scripts}"></div>
+</body>
+</html>
