@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Manage Complaints')}"></head>
+<body class="bg-light">
+    <nav th:replace="~{base :: navbar}"></nav>
+
+    <div class="container py-5 mt-5">
+        <!-- Flash Messages -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Header -->
+        <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                 style="width:56px; height:56px; background: linear-gradient(135deg, #ef4444, #dc2626);">
+                <i class="bi bi-exclamation-triangle-fill text-white fs-4"></i>
+            </div>
+            <div>
+                <h2 class="fw-bold mb-0">Complaints</h2>
+                <p class="text-muted mb-0">Review and resolve student complaints for your properties.</p>
+            </div>
+        </div>
+
+        <!-- Complaints Table -->
+        <div class="card border-0 rounded-4 shadow-sm">
+            <div class="card-body p-4">
+                <div th:if="${#lists.isEmpty(complaints)}" class="text-center py-5">
+                    <i class="bi bi-chat-square-text text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3 mb-0">No complaints received yet.</p>
+                </div>
+                <div th:unless="${#lists.isEmpty(complaints)}" class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Subject</th>
+                                <th>From</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c : ${complaints}">
+                                <td class="fw-medium" th:text="${c.subject}">Subject</td>
+                                <td>
+                                    <i class="bi bi-person-circle me-1 text-primary"></i>
+                                    <span th:text="${c.user.fullName}">Student</span>
+                                </td>
+                                <td>
+                                    <span class="text-muted" style="max-width: 300px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                          th:text="${c.description}" th:title="${c.description}">Description text</span>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill"
+                                          th:classappend="${c.status.name() == 'OPEN' ? 'bg-danger' :
+                                                           (c.status.name() == 'IN_PROGRESS' ? 'bg-warning text-dark' : 'bg-success')}"
+                                          th:text="${c.status}">OPEN</span>
+                                </td>
+                                <td>
+                                    <form th:if="${c.status.name() != 'RESOLVED'}"
+                                          th:action="@{'/owner/complaints/' + ${c.id} + '/resolve'}" method="post"
+                                          style="display:inline;">
+                                        <button type="submit" class="btn btn-success btn-sm rounded-pill"
+                                                onclick="return confirm('Mark as resolved?')">
+                                            <i class="bi bi-check-circle me-1"></i>Resolve
+                                        </button>
+                                    </form>
+                                    <span th:if="${c.status.name() == 'RESOLVED'}" class="text-success small">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Resolved
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:replace="~{base :: scripts}"></script>
+</body>
+</html>
