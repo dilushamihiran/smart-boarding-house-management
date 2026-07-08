@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Book Room')}"></head>
+<body class="bg-light">
+    <nav th:replace="~{base :: navbar}"></nav>
+
+    <div class="container py-5 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <!-- Back Link -->
+                <a th:href="@{/search}" class="text-decoration-none text-muted mb-3 d-inline-block">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Search
+                </a>
+
+                <div class="card border-0 rounded-4 shadow-sm">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h4 class="fw-bold mb-0">
+                            <i class="bi bi-calendar-plus me-2 text-primary"></i>Book a Room
+                        </h4>
+                    </div>
+                    <div class="card-body px-4 pb-4">
+                        <!-- Room Details -->
+                        <div class="bg-light rounded-4 p-4 mb-4">
+                            <h6 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-door-open me-2"></i>Room Details
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <small class="text-muted text-uppercase fw-semibold d-block mb-1">Room Name</small>
+                                    <span class="fw-medium" th:text="${room.roomName}">Room 101</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted text-uppercase fw-semibold d-block mb-1">Monthly Price</small>
+                                    <span class="fw-bold text-success fs-5">Rs. <span th:text="${#numbers.formatDecimal(room.price, 1, 2)}">0.00</span></span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted text-uppercase fw-semibold d-block mb-1">Boarding House</small>
+                                    <span class="fw-medium" th:text="${room.boardingHouse.name}">BH Name</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <small class="text-muted text-uppercase fw-semibold d-block mb-1">Location</small>
+                                    <span class="fw-medium" th:text="${room.boardingHouse.address}">Address</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Booking Form -->
+                        <form th:action="@{'/student/book/' + ${room.id}}" method="post">
+                            <div class="mb-3">
+                                <label for="checkInDate" class="form-label fw-semibold">
+                                    <i class="bi bi-calendar-date me-1"></i>Check-in Date
+                                </label>
+                                <input type="date" class="form-control rounded-3" id="checkInDate"
+                                       name="checkInDate" required />
+                            </div>
+                            <div class="mb-4">
+                                <label for="duration" class="form-label fw-semibold">
+                                    <i class="bi bi-clock me-1"></i>Duration (months)
+                                </label>
+                                <input type="number" class="form-control rounded-3" id="duration"
+                                       name="duration" min="1" max="24" value="1" required />
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                    <i class="bi bi-check-circle me-2"></i>Submit Booking Request
+                                </button>
+                                <a th:href="@{/search}" class="btn btn-outline-secondary rounded-pill">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:replace="~{base :: scripts}"></script>
+</body>
+</html>
